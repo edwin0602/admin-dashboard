@@ -16,8 +16,8 @@ const Settings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">
+        <h1 className="text-2xl mb-1 font-semibold flex items-center gap-3">Settings</h1>
+        <p className="text-muted-foreground mb-6 text-sm">
           Manage your application settings and project configuration.
         </p>
       </div>

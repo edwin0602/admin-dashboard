@@ -32,11 +32,6 @@ const SidebarNavs: React.FC = () => {
       icon: <User size={14} />,
       link: "/app/staff",
     },
-    {
-      name: "Settings",
-      icon: <Settings size={14} />,
-      link: "/app/settings",
-    },
   ];
 
   return (
@@ -54,74 +49,71 @@ const SidebarNavs: React.FC = () => {
           <span className="text-sm">{nav.name}</span>
         </Link>
       ))}
-      <Accordion
-        type="single"
-        collapsible
-        defaultValue="item-1"
-        className="w-full"
-      >
-        <AccordionItem value="item-1" className="border-none">
-          <AccordionTrigger>
-            <p className="text-[10px] text-muted-foreground/70">Collections</p>
-          </AccordionTrigger>
-          <AccordionContent>
-            {config.groups.map((group, i) => (
-              <Accordion
-                key={i}
-                type="single"
-                collapsible
-                defaultValue="item-1"
-                className="w-full pl-2"
-              >
-                <AccordionItem value="item-1" className="border-none">
-                  <AccordionTrigger
-                    style={{ padding: "0px", paddingBottom: "12px" }}
+      {config.groups.map((group, i) => (
+        <Accordion
+          key={i}
+          type="single"
+          collapsible
+          className="w-full pl-2 p-1.5"
+        >
+          <AccordionItem value="item-1" className="border-none">
+            <AccordionTrigger
+              style={{ padding: "0px", paddingBottom: "0px" }}
+            >
+              <p className="flex items-center text-muted-foreground gap-2 text-sm">
+                <Component size={14} />
+                {group.name}
+              </p>
+            </AccordionTrigger>
+            <AccordionContent className="pl-1">
+              {config.collections
+                .filter((c) => c.groupId === group.id)
+                .map((collection: any, i: number) => (
+                  <Link
+                    key={i}
+                    href={`/app/collections/${collection.collectionId}`}
+                    className={`flex w-full items-center text-sm transition-all ${pathname ===
+                      `/app/collections/${collection.collectionId}`
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                      } hover:bg-muted rounded-md gap-2 mb-1 p-1.5 px-1`}
                   >
-                    <p className="flex items-center text-muted-foreground gap-2 text-sm">
-                      <Component size={14} />
-                      {group.name}
-                    </p>
-                  </AccordionTrigger>
-                  <AccordionContent className="pl-1">
-                    {config.collections
-                      .filter((c) => c.groupId === group.id)
-                      .map((collection: any, i: number) => (
-                        <Link
-                          key={i}
-                          href={`/app/collections/${collection.collectionId}`}
-                          className={`flex w-full items-center text-sm transition-all ${pathname ===
-                            `/app/collections/${collection.collectionId}`
-                            ? "bg-muted text-primary"
-                            : "text-muted-foreground"
-                            } hover:bg-muted rounded-md gap-2 p-1.5 px-1`}
-                        >
-                          <FileText size={14} />
-                          <span className="text-sm">{collection.name}</span>
-                        </Link>
-                      ))}
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            ))}
+                    <FileText size={14} />
+                    <span className="text-sm">{collection.name}</span>
+                  </Link>
+                ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ))}
 
-            {config.collections
-              .filter((c) => !c.groupId)
-              .map((collection, i) => (
-                <Link
-                  key={i}
-                  href={`/app/collections/${collection.collectionId}`}
-                  className={`flex w-full items-center text-sm transition-all ${pathname === `/app/collections/${collection.collectionId}`
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground"
-                    } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
-                >
-                  <FileText size={14} />
-                  <span className="text-sm">{collection.name}</span>
-                </Link>
-              ))}
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      {config.collections
+        .filter((c) => !c.groupId)
+        .map((collection, i) => (
+          <Link
+            key={i}
+            href={`/app/collections/${collection.collectionId}`}
+            className={`flex w-full items-center text-sm transition-all ${pathname === `/app/collections/${collection.collectionId}`
+              ? "bg-muted text-primary"
+              : "text-muted-foreground"
+              } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
+          >
+            <FileText size={14} />
+            <span className="text-sm">{collection.name}</span>
+          </Link>
+        ))}
+
+      <Link
+        key={"settings"}
+        href={"/app/settings"}
+        className={`flex w-full items-center text-sm transition-all ${pathname === "/app/settings"
+          ? "bg-muted text-primary"
+          : "text-muted-foreground"
+          } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
+      >
+        <Settings size={14} />
+        <span className="text-sm">Settings</span>
+      </Link>
     </nav>
   );
 };

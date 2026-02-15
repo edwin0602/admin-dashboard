@@ -32,8 +32,8 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function CollectionPage() {
@@ -124,7 +124,7 @@ export default function CollectionPage() {
                 setDeleteDialogOpen(!deleteDialogOpen);
               }}
             >
-              <DialogTrigger>
+              <DialogTrigger asChild>
                 <Button className="p-1 px-2" size={"sm"} variant="ghost">
                   <Trash size={14} className="text-red-400" />
                 </Button>
@@ -137,7 +137,7 @@ export default function CollectionPage() {
                   This action is irreversible. You will not be able to recover
                 </DialogDescription>
                 <div className="flex items-center gap-4 justify-end">
-                  <DialogClose>
+                  <DialogClose asChild>
                     <Button variant="ghost">Cancel</Button>
                   </DialogClose>
                   <Button
@@ -208,7 +208,7 @@ export default function CollectionPage() {
 
   return (
     <div>
-      <div className="pt-6 users-table">
+      <div className="users-table">
         <h1 className="text-2xl mb-1 font-semibold flex items-center gap-3">
           {collection?.name}
           <span className="text-xs bg-muted p-1 px-2 font-normal text-foreground rounded-full">

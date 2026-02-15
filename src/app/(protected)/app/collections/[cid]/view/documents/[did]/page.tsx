@@ -10,6 +10,7 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { findCollectionById } from "@/helpers/findCollectionById";
@@ -98,7 +99,7 @@ const DocumentPage = () => {
               setDeleteDialogOpen(!deleteDialogOpen);
             }}
           >
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button size={"sm"} variant="destructive">
                 <Trash size={14} className="mr-2" /> Delete
               </Button>
@@ -109,14 +110,9 @@ const DocumentPage = () => {
                 This action is irreversible. You will not be able to recover
               </DialogDescription>
               <div className="flex items-center gap-4 justify-end">
-                <Button
-                  onClick={() => {
-                    setDeleteDialogOpen(!deleteDialogOpen);
-                  }}
-                  variant="ghost"
-                >
-                  Cancel
-                </Button>
+                <DialogClose asChild>
+                  <Button variant="ghost">Cancel</Button>
+                </DialogClose>
                 <Button
                   disabled={isDeleting}
                   onClick={handleDeleteDocument}

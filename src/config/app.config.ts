@@ -10,36 +10,12 @@ export const config: IConfig = {
     {
       name: "Basic",
       id: "basic",
-    },
+    }
   ],
   collections: [
     {
-      name: "Products",
-      collectionId: "64aa86c273d6c0b91a0e",
-      searchColumn: "name",
-      columns: [
-        {
-          key: "name",
-          label: "Product Name",
-        },
-        {
-          key: "price",
-          label: "Price",
-        },
-        {
-          key: "shortDescription",
-          label: "Short Description",
-        },
-        {
-          key: "img",
-          label: "Product Image",
-          type: "file",
-          bucketId: "64ab87a0338ed7395f52",
-        },
-      ],
-    },
-    {
       name: "Staff",
+      groupId: "basic",
       collectionId: "staff",
       searchColumn: "fullName",
       columns: [
@@ -91,7 +67,7 @@ export const config: IConfig = {
           },
         },
       ],
-    },
+    }
   ],
   shortcuts: [
     {
