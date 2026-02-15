@@ -11,4 +11,8 @@ export interface IConfig {
   groups: IGroup[];
   collections: ICollection[];
   shortcuts: IShortcut[];
+  staffCollectionId: string;
+  rolesCollectionId: string;
+  permissionsCollectionId: string;
+  rolePermissionsCollectionId: string;
 }

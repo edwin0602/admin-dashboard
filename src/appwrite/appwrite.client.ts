@@ -15,6 +15,7 @@ export class AppwriteService {
   public account: Account;
   public databases: Databases;
   public storage: Storage;
+  private _cachedRoles: any = null;
 
   constructor() {
     this.client.setEndpoint(config.endpoint).setProject(config.projectId);
@@ -130,7 +131,7 @@ export class AppwriteService {
 
   async getStaffStatus(userId: string) {
     try {
-      const result = await this.databases.listDocuments(config.databaseId, "staff", [
+      const result = await this.databases.listDocuments(config.databaseId, config.staffCollectionId, [
         Query.equal("userId", [userId]),
         Query.limit(1)
       ]);
@@ -182,6 +183,47 @@ export class AppwriteService {
       };
     }
     return result;
+  }
+
+  // Roles & Permissions Methods
+  async getRoles(forceRefresh: boolean = false) {
+    if (this._cachedRoles && !forceRefresh) {
+      return this._cachedRoles;
+    }
+    const roles = await this.databases.listDocuments(databaseId, config.rolesCollectionId, [
+      Query.orderAsc("name")
+    ]);
+    this._cachedRoles = roles;
+    return roles;
+  }
+
+  clearRolesCache() {
+    this._cachedRoles = null;
+  }
+
+  async getPermissions() {
+    return await this.databases.listDocuments(databaseId, config.permissionsCollectionId, [
+      Query.orderAsc("group"),
+      Query.limit(100)
+    ]);
+  }
+
+  async getRolePermissionsByRole(roleId: string) {
+    return await this.databases.listDocuments(databaseId, config.rolePermissionsCollectionId, [
+      Query.equal("roleId", [roleId]),
+      Query.limit(100)
+    ]);
+  }
+
+  async addRolePermission(roleId: string, permissionId: string) {
+    return await this.createDocument(config.rolePermissionsCollectionId, {
+      roleId,
+      permissionId
+    });
+  }
+
+  async deleteRolePermission(documentId: string) {
+    return await this.deleteDocument(config.rolePermissionsCollectionId, documentId);
   }
 }
 

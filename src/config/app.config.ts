@@ -83,4 +83,8 @@ export const config: IConfig = {
       keyAfterCtrl: "y",
     },
   ],
+  staffCollectionId: "staff",
+  rolesCollectionId: "roles",
+  permissionsCollectionId: "permissions",
+  rolePermissionsCollectionId: "role_permissions",
 };

@@ -16,9 +16,11 @@ import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { setCollection } from "@/redux/collectionSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 import { selectTotal, setTotal } from "@/redux/appSlice";
+import { IRole } from "@/interfaces/IRole";
 
 export default function StaffPage() {
     const [data, setData] = useState<Models.Document[]>([]);
+    const [roles, setRoles] = useState<IRole[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedStaff, setSelectedStaff] = useState<Models.Document | null>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -28,24 +30,31 @@ export default function StaffPage() {
     const { toast } = useToast();
     const dispatch: Dispatch = useAppDispatch();
 
-    const staffCID = config.collections.find(c => c.name === "Staff")?.collectionId || "";
-
     const fetchStaff = async () => {
         try {
             setLoading(true);
-            const response = await api.getDocuments(staffCID);
-            setData(response.documents);
-            dispatch(setTotal(response.total));
+            const [staffRes, rolesRes] = await Promise.all([
+                api.getDocuments(config.staffCollectionId),
+                api.getRoles()
+            ]);
+            setData(staffRes.documents);
+            setRoles(rolesRes.documents as IRole[]);
+            dispatch(setTotal(staffRes.total));
         } catch (error: any) {
-            console.error("Error fetching staff:", error);
+            console.error("Error fetching staff data:", error);
             toast({
                 title: "Error",
-                description: "Could not load staff list.",
+                description: "Could not load staff or roles list.",
                 variant: "destructive",
             });
         } finally {
             setLoading(false);
         }
+    };
+
+    const getRoleName = (roleId: string) => {
+        const role = roles.find(r => r.$id === roleId || r.name === roleId);
+        return role ? role.name : roleId;
     };
 
     const columns: ColumnDef<Models.Document>[] = [
@@ -66,7 +75,11 @@ export default function StaffPage() {
         {
             accessorKey: "role",
             header: "Role",
-            cell: ({ row }) => <Badge variant="secondary" className="capitalize">{row.original.role}</Badge>,
+            cell: ({ row }) => (
+                <Badge variant="secondary" className="capitalize">
+                    {getRoleName(row.original.role)}
+                </Badge>
+            ),
         },
         {
             accessorKey: "status",
@@ -87,15 +100,15 @@ export default function StaffPage() {
     };
 
     useEffect(() => {
-        if (staffCID) {
+        if (config.staffCollectionId) {
             fetchStaff();
-            const collection = findCollectionById(staffCID);
+            const collection = findCollectionById(config.staffCollectionId);
             if (collection) {
                 dispatch(setCollection(collection));
                 dispatch(setTotal(0));
             }
         }
-    }, [staffCID]);
+    }, [config.staffCollectionId]);
 
     return (
         <div>

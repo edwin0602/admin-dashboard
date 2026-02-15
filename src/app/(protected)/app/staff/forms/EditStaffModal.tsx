@@ -34,11 +34,12 @@ import { Models } from "appwrite";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { IRole } from "@/interfaces/IRole";
 
 const formSchema = z.object({
     fullName: z.string().min(2, "Name must be at least 2 characters"),
     phone: z.string().optional(),
-    role: z.enum(["user", "admin"]),
+    role: z.string().min(1, "Select a role"),
     status: z.enum(["ACTIVE", "INACTIVE", "BANNED"]),
 });
 
@@ -52,6 +53,8 @@ interface EditStaffModalProps {
 export function EditStaffModal({ staff, open, onOpenChange, onSuccess }: EditStaffModalProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [isResettingPassword, setIsResettingPassword] = useState(false);
+    const [roles, setRoles] = useState<IRole[]>([]);
+    const [isLoadingRoles, setIsLoadingRoles] = useState(false);
     const { toast } = useToast();
 
     const staffCID = config.collections.find((c) => c.name === "Staff")?.collectionId || "";
@@ -61,10 +64,32 @@ export function EditStaffModal({ staff, open, onOpenChange, onSuccess }: EditSta
         defaultValues: {
             fullName: "",
             phone: "",
-            role: "user",
+            role: "",
             status: "ACTIVE",
         },
     });
+
+    useEffect(() => {
+        if (open) {
+            fetchRoles();
+        }
+    }, [open]);
+
+    const fetchRoles = async () => {
+        try {
+            setIsLoadingRoles(true);
+            const res = await api.getRoles();
+            setRoles(res.documents as IRole[]);
+        } catch (error: any) {
+            toast({
+                title: "Error fetching roles",
+                description: error.message,
+                variant: "destructive"
+            });
+        } finally {
+            setIsLoadingRoles(false);
+        }
+    };
 
     useEffect(() => {
         if (staff) {
@@ -180,13 +205,19 @@ export function EditStaffModal({ staff, open, onOpenChange, onSuccess }: EditSta
                                         <FormLabel>Role</FormLabel>
                                         <Select onValueChange={field.onChange} value={field.value}>
                                             <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select role" />
+                                                <SelectTrigger disabled={isLoadingRoles}>
+                                                    <SelectValue placeholder={isLoadingRoles ? "Loading roles..." : "Select role"} />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="user">User</SelectItem>
-                                                <SelectItem value="admin">Admin</SelectItem>
+                                                {roles.map((role) => (
+                                                    <SelectItem key={role.$id} value={role.$id}>
+                                                        {role.name}
+                                                    </SelectItem>
+                                                ))}
+                                                {roles.length === 0 && !isLoadingRoles && (
+                                                    <SelectItem value="user">User</SelectItem>
+                                                )}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />

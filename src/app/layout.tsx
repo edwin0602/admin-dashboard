@@ -2,12 +2,13 @@ import { ThemeProvider } from "@/theme/ThemeProvider";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
+import { config } from "@/config/app.config";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Appwrite Manager",
-  description: "Manage your Appwrite project with ease!",
+  title: config.projectName,
+  description: "Manage your project",
 };
 
 export default function RootLayout({

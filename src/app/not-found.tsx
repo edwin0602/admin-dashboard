@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home } from "lucide-react";
+import { config } from "@/config/app.config";
 
 export default function NotFound() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function NotFound() {
       </div>
 
       <div className="absolute bottom-8 text-sm text-muted-foreground/50">
-        © {new Date().getFullYear()} Appwrite Manager. All rights reserved.
+        © {new Date().getFullYear()} {config.projectName}. All rights reserved.
       </div>
     </div>
   );

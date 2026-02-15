@@ -30,16 +30,16 @@ import { useToast } from "@/components/ui/use-toast";
 import { config } from "@/config/app.config";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info, Loader2, UserPlus } from "lucide-react";
-import { ID } from "appwrite";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { IRole } from "@/interfaces/IRole";
 
 const formSchema = z.object({
     fullName: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Invalid email address"),
     phone: z.string().optional(),
-    role: z.enum(["user", "admin"]),
+    role: z.string().min(1, "Select a role"),
 });
 
 interface CreateStaffModalProps {
@@ -49,6 +49,8 @@ interface CreateStaffModalProps {
 export function CreateStaffModal({ onSuccess }: CreateStaffModalProps) {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [roles, setRoles] = useState<IRole[]>([]);
+    const [isLoadingRoles, setIsLoadingRoles] = useState(false);
     const { toast } = useToast();
 
     const staffCID = config.collections.find((c) => c.name === "Staff")?.collectionId || "";
@@ -59,9 +61,31 @@ export function CreateStaffModal({ onSuccess }: CreateStaffModalProps) {
             fullName: "",
             email: "",
             phone: "",
-            role: "user",
+            role: "",
         },
     });
+
+    useEffect(() => {
+        if (open) {
+            fetchRoles();
+        }
+    }, [open]);
+
+    const fetchRoles = async () => {
+        try {
+            setIsLoadingRoles(true);
+            const res = await api.getRoles();
+            setRoles(res.documents as IRole[]);
+        } catch (error: any) {
+            toast({
+                title: "Error fetching roles",
+                description: error.message,
+                variant: "destructive"
+            });
+        } finally {
+            setIsLoadingRoles(false);
+        }
+    };
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         if (!staffCID) return;
@@ -166,13 +190,19 @@ export function CreateStaffModal({ onSuccess }: CreateStaffModalProps) {
                                     <FormLabel>Role</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a role" />
+                                            <SelectTrigger disabled={isLoadingRoles}>
+                                                <SelectValue placeholder={isLoadingRoles ? "Loading roles..." : "Select a role"} />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="user">User</SelectItem>
-                                            <SelectItem value="admin">Admin</SelectItem>
+                                            {roles.map((role) => (
+                                                <SelectItem key={role.$id} value={role.$id}>
+                                                    {role.name}
+                                                </SelectItem>
+                                            ))}
+                                            {roles.length === 0 && !isLoadingRoles && (
+                                                <SelectItem value="user">User (Default)</SelectItem>
+                                            )}
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -196,3 +226,4 @@ export function CreateStaffModal({ onSuccess }: CreateStaffModalProps) {
         </Dialog>
     );
 }
+
