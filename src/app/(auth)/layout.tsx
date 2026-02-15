@@ -15,7 +15,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           router.replace("/app");
         }
       } catch (err: any) {
-        console.log("No active session found:", err.message);
+        // No active session is expected for public routes
       } finally {
         setLoading(false);
       }

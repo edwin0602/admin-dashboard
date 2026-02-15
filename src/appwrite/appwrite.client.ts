@@ -124,8 +124,8 @@ export class AppwriteService {
     return await this.storage.createFile(bucketId, ID.unique(), file);
   }
 
-  async getFilePreview(bucketId: string, fileId: string) {
-    return this.storage.getFileView(bucketId, fileId);
+  getFilePreview(bucketId: string, fileId: string) {
+    return this.storage.getFileView(bucketId, fileId).toString();
   }
 
   async getStaffStatus(userId: string) {

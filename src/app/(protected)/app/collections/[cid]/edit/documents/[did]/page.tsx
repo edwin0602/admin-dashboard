@@ -57,22 +57,24 @@ const EditDocument = () => {
 
   const fetchDocument = async () => {
     const document = await api.getDocument(cid, did);
-    const {
-      $permissions,
-      $collectionId,
-      $createdAt,
-      $databaseId,
-      $updatedAt,
-      ...rest
-    } = document;
-    setDocument(rest);
+    setDocument(document);
     setLoading(false);
   };
 
   const handleUpdate = async () => {
     setIsUpdating(true);
     try {
-      api.updateDocument(cid, did, document);
+      const {
+        $id,
+        $permissions,
+        $collectionId,
+        $createdAt,
+        $databaseId,
+        $updatedAt,
+        ...data
+      } = document;
+
+      await api.updateDocument(cid, did, data);
       toast({
         title: "Document updated successfully",
         variant: "default",

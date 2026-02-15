@@ -40,6 +40,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
