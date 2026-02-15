@@ -99,12 +99,14 @@ const DashboardHeader = () => {
         </div>
       </div>
       <div className="right flex items-center gap-4">
-        <Link
+        <a
           className="text-sm text-muted-foreground hover:text-foreground"
-          href="/docs"
+          href="https://appwrite.io/docs"
+          target="_blank"
+          rel="noreferrer"
         >
           Docs
-        </Link>
+        </a>
         <Keyboard size={15} />
         <TooltipProvider>
           <Tooltip>
