@@ -18,12 +18,16 @@ import {
 import { getShortcutKey } from "@/helpers/getShortcutKey";
 import { ToggleTheme } from "@/theme/ToggleTheme";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Keyboard, LogOut, Loader2, User } from "lucide-react";
+import { Keyboard, LogOut, Loader2, User, Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import BreadCrumb from "./BreadCrumb";
 import { logout, getSession } from "@/lib/services/auth.service";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import SidebarNavs from "../sidebar/SidebarNavs";
+import Logo from "@/components/shared/Logo";
+import { config } from "@/config/app.config";
 
 const DashboardHeader = () => {
   const router = useRouter();
@@ -67,10 +71,32 @@ const DashboardHeader = () => {
     return () => document.removeEventListener("keydown", down);
   }, []);
   return (
-    <header className="flex sticky top-0 items-center justify-between px-7 py-2 border-b">
+    <header className="flex sticky top-0 items-center justify-between px-4 md:px-7 py-2 border-b bg-background/95 backdrop-blur">
       <SearchCommandBox open={searchBoxOpen} setOpen={setSearchBoxOpen} />
-      <div className="left">
-        <BreadCrumb />
+      <div className="flex items-center gap-2">
+        <div className="md:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu size={20} />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[240px] p-0">
+              <div className="top px-4 py-4 flex flex-col items-start">
+                <div className="flex items-center gap-2">
+                  <Logo className="w-[44px] h-[44px]" />
+                  <h2 className="text-sm font-semibold text-secondary-foreground">
+                    {config.projectName}
+                  </h2>
+                </div>
+                <SidebarNavs />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+        <div className="hidden md:block">
+          <BreadCrumb />
+        </div>
       </div>
       <div className="right flex items-center gap-4">
         <Link

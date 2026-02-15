@@ -9,22 +9,12 @@ interface Props {
 
 const DashboardLayout: React.FC<Props> = ({ children }) => {
   return (
-    <div className="flex w-screen h-screen">
+    <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden">
       <Sidebar />
-      <div
-        style={{
-          width: "calc(100% - 240px)",
-        }}
-        className="h-full"
-      >
+      <div className="flex-1 flex flex-col min-w-0 h-full">
         <DashboardHeader />
-        <ScrollArea
-          style={{
-            height: "calc(100vh - 55px)",
-          }}
-          className="w-full"
-        >
-          <div className="p-7 py-3">{children}</div>
+        <ScrollArea className="flex-1 w-full">
+          <div className="p-4 md:p-7 py-3">{children}</div>
         </ScrollArea>
       </div>
     </div>

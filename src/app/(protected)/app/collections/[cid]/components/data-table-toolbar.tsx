@@ -41,8 +41,8 @@ export function DataTableToolbar<TData>({
   }, []);
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-1 items-center space-x-2 w-full sm:w-auto">
         {searchColumn && (
           <div className="relative">
             <Search className="absolute top-1/2 left-2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />

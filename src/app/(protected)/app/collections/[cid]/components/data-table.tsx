@@ -89,12 +89,7 @@ export function DataTable<TData, TValue>({
         searchColumn={searchColumn}
         table={table}
       />
-      <div
-        style={{
-          width: "calc(100vw - 300px)",
-        }}
-        className="rounded-md border"
-      >
+      <div className="rounded-md border overflow-x-auto w-full">
         <Table>
           <TableHeader className="bg-muted">
             {table.getHeaderGroups().map((headerGroup) => (

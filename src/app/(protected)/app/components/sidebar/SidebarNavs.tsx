@@ -33,11 +33,6 @@ const SidebarNavs: React.FC = () => {
       link: "/app/staff",
     },
     {
-      name: "Profile",
-      icon: <User size={14} />,
-      link: "/app/profile",
-    },
-    {
       name: "Settings",
       icon: <Settings size={14} />,
       link: "/app/settings",

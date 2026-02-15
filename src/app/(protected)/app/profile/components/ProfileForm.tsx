@@ -30,17 +30,17 @@ import { useProfile } from "../hooks/useProfile";
 
 const FormSchema = z.object({
     name: z.string().min(2, {
-        message: "El nombre debe tener al menos 2 caracteres.",
+        message: "Name must be at least 2 characters.",
     }),
     email: z.string().email({
-        message: "Introduce un email válido.",
+        message: "Please enter a valid email.",
     }),
     phone: z.string().optional(),
 });
 
 const PasswordSchema = z.object({
     password: z.string().min(8, {
-        message: "La contraseña debe tener al menos 8 caracteres.",
+        message: "Password must be at least 8 characters.",
     }),
 });
 
@@ -84,8 +84,8 @@ export function ProfileForm() {
             setIsSubmitting(false);
         } else {
             toast({
-                title: "Sin cambios",
-                description: "No se han detectado cambios en el nombre.",
+                title: "No changes",
+                description: "No changes detected in the name.",
             });
         }
     }
@@ -115,8 +115,8 @@ export function ProfileForm() {
 
         if (currentValues[action] === originalValue) {
             toast({
-                title: "Sin cambios",
-                description: `El ${action === "email" ? "correo" : "teléfono"} no ha cambiado.`,
+                title: "No changes",
+                description: `The ${action === "email" ? "email" : "phone"} hasn't changed.`,
             });
             return;
         }
@@ -141,25 +141,26 @@ export function ProfileForm() {
                     <section className="space-y-4">
                         <div className="flex items-center gap-2 text-lg font-semibold">
                             <User className="h-5 w-5 text-primary" />
-                            <h3>Información Personal</h3>
+                            <h3>Personal Information</h3>
                         </div>
                         <FormField
                             control={form.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Nombre Completo</FormLabel>
+                                    <FormLabel>Full Name</FormLabel>
                                     <FormControl>
-                                        <div className="flex gap-2">
-                                            <Input disabled={isSubmitting} placeholder="Tu nombre" {...field} />
+                                        <div className="flex flex-col sm:flex-row gap-2">
+                                            <Input disabled={isSubmitting} placeholder="Your name" {...field} />
                                             <Button
                                                 type="button"
                                                 variant="secondary"
                                                 onClick={form.handleSubmit(onGeneralSubmit)}
                                                 disabled={isSubmitting || field.value === user?.name}
+                                                className="w-full sm:w-auto"
                                             >
                                                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-                                                Actualizar
+                                                Update
                                             </Button>
                                         </div>
                                     </FormControl>
@@ -175,7 +176,7 @@ export function ProfileForm() {
                     <section className="space-y-4">
                         <div className="flex items-center gap-2 text-lg font-semibold">
                             <Mail className="h-5 w-5 text-primary" />
-                            <h3>Contacto</h3>
+                            <h3>Contact</h3>
                         </div>
                         <div className="grid gap-4">
                             <FormField
@@ -183,17 +184,18 @@ export function ProfileForm() {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Correo Electrónico</FormLabel>
+                                        <FormLabel>Email Address</FormLabel>
                                         <FormControl>
-                                            <div className="flex gap-2">
-                                                <Input disabled={isSubmitting} placeholder="correo@ejemplo.com" {...field} />
+                                            <div className="flex flex-col sm:flex-row gap-2">
+                                                <Input disabled={isSubmitting} placeholder="email@example.com" {...field} />
                                                 <Button
                                                     type="button"
                                                     variant="outline"
                                                     onClick={() => handleActionClick("email")}
                                                     disabled={isSubmitting || field.value === user?.email}
+                                                    className="w-full sm:w-auto"
                                                 >
-                                                    Cambiar
+                                                    Change
                                                 </Button>
                                             </div>
                                         </FormControl>
@@ -207,17 +209,18 @@ export function ProfileForm() {
                                 name="phone"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Teléfono</FormLabel>
+                                        <FormLabel>Phone</FormLabel>
                                         <FormControl>
-                                            <div className="flex gap-2">
-                                                <Input disabled={isSubmitting} placeholder="+34 600..." {...field} />
+                                            <div className="flex flex-col sm:flex-row gap-2">
+                                                <Input disabled={isSubmitting} placeholder="+1 234..." {...field} />
                                                 <Button
                                                     type="button"
                                                     variant="outline"
                                                     onClick={() => handleActionClick("phone")}
                                                     disabled={isSubmitting || field.value === user?.phone}
+                                                    className="w-full sm:w-auto"
                                                 >
-                                                    Cambiar
+                                                    Change
                                                 </Button>
                                             </div>
                                         </FormControl>
@@ -234,10 +237,10 @@ export function ProfileForm() {
                     <section className="space-y-4 text-center sm:text-left">
                         <div className="flex items-center gap-2 text-lg font-semibold">
                             <Lock className="h-5 w-5 text-primary" />
-                            <h3>Seguridad</h3>
+                            <h3>Security</h3>
                         </div>
                         <p className="text-sm text-muted-foreground italic">
-                            ¿Quieres cambiar tu contraseña? Te enviaremos un correo para que puedas reestablecerla de forma segura.
+                            Want to change your password? We'll send you an email so you can reset it securely.
                         </p>
                         <Button
                             type="button"
@@ -246,7 +249,7 @@ export function ProfileForm() {
                             className="w-full sm:w-auto"
                         >
                             <Key className="mr-2 h-4 w-4" />
-                            Solicitar Cambio de Contraseña
+                            Request Password Change
                         </Button>
                     </section>
                 </div>
@@ -256,9 +259,9 @@ export function ProfileForm() {
             <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Confirmar cambios</DialogTitle>
+                        <DialogTitle>Confirm changes</DialogTitle>
                         <DialogDescription>
-                            Para actualizar tu {pendingAction === "email" ? "correo electrónico" : "número de teléfono"}, debes introducir tu contraseña actual por seguridad.
+                            To update your {pendingAction === "email" ? "email address" : "phone number"}, you must enter your current password for security.
                         </DialogDescription>
                     </DialogHeader>
                     <Form {...passwordForm}>
@@ -268,7 +271,7 @@ export function ProfileForm() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Contraseña</FormLabel>
+                                        <FormLabel>Password</FormLabel>
                                         <FormControl>
                                             <Input type="password" placeholder="••••••••" {...field} />
                                         </FormControl>
@@ -278,11 +281,11 @@ export function ProfileForm() {
                             />
                             <DialogFooter>
                                 <Button type="button" variant="ghost" onClick={() => setIsPasswordDialogOpen(false)}>
-                                    Cancelar
+                                    Cancel
                                 </Button>
                                 <Button type="submit" disabled={isSubmitting}>
                                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Confirmar y Guardar
+                                    Confirm and Save
                                 </Button>
                             </DialogFooter>
                         </form>

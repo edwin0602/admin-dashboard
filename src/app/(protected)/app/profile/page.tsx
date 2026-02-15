@@ -9,9 +9,9 @@ const ProfilePage = () => {
     <div className="max-w-2xl mx-auto pt-10">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Mi Perfil</CardTitle>
+          <CardTitle className="text-2xl font-bold">My Profile</CardTitle>
           <CardDescription>
-            Gestiona la información de tu cuenta y preferencias de seguridad.
+            Manage your account information and security preferences.
           </CardDescription>
         </CardHeader>
         <CardContent>

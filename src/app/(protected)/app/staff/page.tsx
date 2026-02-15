@@ -2,10 +2,8 @@
 
 import api from "@/appwrite/appwrite.client";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Models } from "appwrite";
-import { Mail, Plus, Trash, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DataTable } from "../collections/[cid]/components/data-table";
 import TableSkeleton from "../collections/[cid]/components/table-skeleton";
@@ -14,15 +12,18 @@ import { EditStaffModal } from "./forms/EditStaffModal";
 import { ColumnDef } from "@tanstack/react-table";
 import { config } from "@/config/app.config";
 import { findCollectionById } from "@/helpers/findCollectionById";
-import { useAppDispatch } from "@/hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { setCollection } from "@/redux/collectionSlice";
 import { Dispatch } from "@reduxjs/toolkit";
+import { selectTotal, setTotal } from "@/redux/appSlice";
 
 export default function StaffPage() {
     const [data, setData] = useState<Models.Document[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedStaff, setSelectedStaff] = useState<Models.Document | null>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
+
+    const total = useAppSelector(selectTotal);
 
     const { toast } = useToast();
     const dispatch: Dispatch = useAppDispatch();
@@ -34,6 +35,7 @@ export default function StaffPage() {
             setLoading(true);
             const response = await api.getDocuments(staffCID);
             setData(response.documents);
+            dispatch(setTotal(response.total));
         } catch (error: any) {
             console.error("Error fetching staff:", error);
             toast({
@@ -90,16 +92,21 @@ export default function StaffPage() {
             const collection = findCollectionById(staffCID);
             if (collection) {
                 dispatch(setCollection(collection));
+                dispatch(setTotal(0));
             }
         }
     }, [staffCID]);
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Staff</h1>
-                    <p className="text-muted-foreground">
+                    <h1 className="text-2xl mb-1 font-semibold flex items-center gap-3">
+                        Staff
+                        <span className="text-xs bg-muted p-1 px-2 font-normal text-foreground rounded-full">
+                            {total} Documents
+                        </span></h1>
+                    <p className="text-muted-foreground mb-6 text-sm">
                         Manage system staff, roles, and access status. Click a row to edit.
                     </p>
                 </div>
