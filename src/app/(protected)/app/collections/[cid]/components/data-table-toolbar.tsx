@@ -8,17 +8,19 @@ import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { DataTableFacetedFilter } from "./data-table-facted-filter";
 import { useEffect, useRef } from "react";
-import { config } from "@/config/config";
+import { config } from "@/config/app.config";
 import { getShortcutKey } from "@/helpers/getShortcutKey";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   searchColumn: string;
+  hideAddButton?: boolean;
 }
 
 export function DataTableToolbar<TData>({
   table,
   searchColumn,
+  hideAddButton,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -100,7 +102,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <DataTableViewOptions hideAddButton={hideAddButton} table={table} />
     </div>
   );
 }

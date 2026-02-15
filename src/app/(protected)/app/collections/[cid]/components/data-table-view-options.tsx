@@ -21,10 +21,12 @@ import { useEffect, useState } from "react";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
+  hideAddButton?: boolean;
 }
 
 export function DataTableViewOptions<TData>({
   table,
+  hideAddButton,
 }: DataTableViewOptionsProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
   const filterShortcutKey = getShortcutKey("filter");
@@ -45,12 +47,14 @@ export function DataTableViewOptions<TData>({
   }, []);
   return (
     <div className="flex items-center gap-3">
-      <Link href={`/app/collections/${collection.collectionId}/new`}>
-        <Button size={"sm"} className="text-xs">
-          <PlusIcon className="mr-2 h-4 w-4" />
-          Add new
-        </Button>
-      </Link>
+      {!hideAddButton && collection?.collectionId && (
+        <Link href={`/app/collections/${collection.collectionId}/new`}>
+          <Button size={"sm"} className="text-xs">
+            <PlusIcon className="mr-2 h-4 w-4" />
+            Add new
+          </Button>
+        </Link>
+      )}
       <DropdownMenu
         open={open}
         onOpenChange={() => {

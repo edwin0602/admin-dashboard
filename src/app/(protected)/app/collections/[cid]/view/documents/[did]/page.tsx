@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/appwrite/appwrite";
+import api from "@/appwrite/appwrite.client";
 import ViewFile from "@/components/shared/view/ViewFile";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

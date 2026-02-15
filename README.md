@@ -5,4 +5,3 @@ Appwrite Manager is a headless CMS designed to create admin panels quickly and e
 
 
 https://github.com/NiazMorshed2007/appwrite-manager/assets/77217706/779ad557-0a59-4b48-a543-184e69cd4f7d
-

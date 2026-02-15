@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/appwrite/appwrite";
+import api from "@/appwrite/appwrite.client";
 import ViewFile from "@/components/shared/view/ViewFile";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -169,25 +169,25 @@ export default function CollectionPage() {
     },
     ...(collection?.columns
       ? collection.columns.map((column: IColumn) => ({
-          accessorKey: column.key as string,
-          header: column.label as string,
-          enableHiding: column.enableHiding as boolean,
-          cell: ({ row }: { row: Row<any> }) => (
-            <>
-              {!column.type && <p>{row.original[column.key]}</p>}
-              {column.type === "enum" && (
-                <Badge>{row.original[column.key]}</Badge>
-              )}
-              {column.type === "file" && (
-                <ViewFile
-                  className="w-[30px] h-[30px]"
-                  bucketId={column.bucketId}
-                  fileId={row.original[column.key]}
-                />
-              )}
-            </>
-          ),
-        }))
+        accessorKey: column.key as string,
+        header: column.label as string,
+        enableHiding: column.enableHiding as boolean,
+        cell: ({ row }: { row: Row<any> }) => (
+          <>
+            {!column.type && <p>{row.original[column.key]}</p>}
+            {column.type === "enum" && (
+              <Badge>{row.original[column.key]}</Badge>
+            )}
+            {column.type === "file" && (
+              <ViewFile
+                className="w-[30px] h-[30px]"
+                bucketId={column.bucketId}
+                fileId={row.original[column.key]}
+              />
+            )}
+          </>
+        ),
+      }))
       : []),
   ];
 

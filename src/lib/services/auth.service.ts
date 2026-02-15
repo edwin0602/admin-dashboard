@@ -1,4 +1,4 @@
-import api from "@/appwrite/appwrite";
+import api from "@/appwrite/appwrite.client";
 
 export const getSession = async () => {
   return await api.getAccount();

@@ -10,16 +10,18 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const check = async () => {
       try {
-        await getSession();
-        router.replace("/app");
+        const user = await getSession();
+        if (user) {
+          router.replace("/app");
+        }
       } catch (err: any) {
-        console.log(err);
+        console.log("No active session found:", err.message);
       } finally {
         setLoading(false);
       }
     };
     check();
-  }, []);
+  }, [router]);
   return (
     <>
       {loading ? (

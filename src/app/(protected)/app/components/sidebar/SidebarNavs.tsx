@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { config } from "@/config/config";
+import { config } from "@/config/app.config";
 import { Component, FileText, Home, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,6 +28,11 @@ const SidebarNavs: React.FC = () => {
       link: "/app",
     },
     {
+      name: "Staff",
+      icon: <User size={14} />,
+      link: "/app/staff",
+    },
+    {
       name: "Profile",
       icon: <User size={14} />,
       link: "/app/profile",
@@ -45,11 +50,10 @@ const SidebarNavs: React.FC = () => {
         <Link
           key={i}
           href={nav.link}
-          className={`flex w-full items-center text-sm transition-all ${
-            pathname === nav.link
-              ? "bg-muted text-primary"
-              : "text-muted-foreground"
-          } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
+          className={`flex w-full items-center text-sm transition-all ${pathname === nav.link
+            ? "bg-muted text-primary"
+            : "text-muted-foreground"
+            } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
         >
           {nav.icon}
           <span className="text-sm">{nav.name}</span>
@@ -90,12 +94,11 @@ const SidebarNavs: React.FC = () => {
                         <Link
                           key={i}
                           href={`/app/collections/${collection.collectionId}`}
-                          className={`flex w-full items-center text-sm transition-all ${
-                            pathname ===
+                          className={`flex w-full items-center text-sm transition-all ${pathname ===
                             `/app/collections/${collection.collectionId}`
-                              ? "bg-muted text-primary"
-                              : "text-muted-foreground"
-                          } hover:bg-muted rounded-md gap-2 p-1.5 px-1`}
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground"
+                            } hover:bg-muted rounded-md gap-2 p-1.5 px-1`}
                         >
                           <FileText size={14} />
                           <span className="text-sm">{collection.name}</span>
@@ -112,11 +115,10 @@ const SidebarNavs: React.FC = () => {
                 <Link
                   key={i}
                   href={`/app/collections/${collection.collectionId}`}
-                  className={`flex w-full items-center text-sm transition-all ${
-                    pathname === `/app/collections/${collection.collectionId}`
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
+                  className={`flex w-full items-center text-sm transition-all ${pathname === `/app/collections/${collection.collectionId}`
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground"
+                    } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
                 >
                   <FileText size={14} />
                   <span className="text-sm">{collection.name}</span>

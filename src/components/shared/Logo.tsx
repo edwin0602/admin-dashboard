@@ -1,4 +1,4 @@
-import { config } from "@/config/config";
+import { config } from "@/config/app.config";
 import React from "react";
 
 interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {

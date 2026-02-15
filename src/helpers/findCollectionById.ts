@@ -1,4 +1,4 @@
-import { config } from "@/config/config";
+import { config } from "@/config/app.config";
 import { ICollection } from "@/interfaces/ICollection";
 
 export const findCollectionById = (cid: string): ICollection | undefined => {

@@ -1,6 +1,6 @@
 import Logo from "@/components/shared/Logo";
 import SidebarNavs from "./SidebarNavs";
-import { config } from "@/config/config";
+import { config } from "@/config/app.config";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Sidebar = () => {

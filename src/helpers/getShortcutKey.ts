@@ -1,4 +1,4 @@
-import { config } from "@/config/config";
+import { config } from "@/config/app.config";
 import { IShortcut } from "@/interfaces/IShortcut";
 
 export const getShortcutKey = (shortcutAction: IShortcut["action"]): string => {

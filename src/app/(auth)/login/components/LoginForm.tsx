@@ -1,7 +1,8 @@
 "use client";
 
-import api from "@/appwrite/appwrite";
+import api from "@/appwrite/appwrite.client";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   Form,
   FormControl,
@@ -20,7 +21,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -45,6 +46,36 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
     try {
       await api.createSession(data);
+      const user = await api.getAccount();
+
+      // 1. Email Verification Check
+      if (!user.emailVerification) {
+        await api.deleteCurrentSession();
+        toast({
+          title: "Email not verified",
+          variant: "destructive",
+          description: "Please verify your email before logging in.",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Staff Status Check
+      const status = await api.getStaffStatus(user.$id);
+      if (status === "INACTIVE" || status === "BANNED") {
+        await api.deleteCurrentSession();
+        const message = status === "BANNED"
+          ? "Your account has been banned. Please contact support."
+          : "Your account is inactive. Please contact an administrator.";
+        toast({
+          title: "Access Denied",
+          variant: "destructive",
+          description: message,
+        });
+        setIsLoading(false);
+        return;
+      }
+
       toast({
         title: "Login Successful",
         description: "Redirecting you to dashboard...",
@@ -101,6 +132,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               </FormItem>
             )}
           />
+
+          <div className="flex justify-end">
+            <Button variant="link" size="sm" asChild className="px-0 font-normal">
+              <Link href="/forgot-password">Forgot password?</Link>
+            </Button>
+          </div>
 
           <Button disabled={isLoading} className="w-full">
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

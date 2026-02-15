@@ -36,6 +36,8 @@ interface DataTableProps<TData, TValue> {
   pagination: boolean;
   searchColumn: string;
   loading: boolean;
+  hideAddButton?: boolean;
+  onRowClick?: (data: TData) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -44,6 +46,8 @@ export function DataTable<TData, TValue>({
   pagination,
   searchColumn,
   loading,
+  hideAddButton,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -80,7 +84,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar searchColumn={searchColumn} table={table} />
+      <DataTableToolbar
+        hideAddButton={hideAddButton}
+        searchColumn={searchColumn}
+        table={table}
+      />
       <div
         style={{
           width: "calc(100vw - 300px)",
@@ -97,9 +105,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -112,6 +120,8 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => onRowClick && onRowClick(row.original)}
+                  className={onRowClick ? "cursor-pointer" : ""}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

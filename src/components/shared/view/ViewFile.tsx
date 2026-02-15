@@ -1,4 +1,4 @@
-import api from "@/appwrite/appwrite";
+import api from "@/appwrite/appwrite.client";
 import React from "react";
 
 interface ViewFileProps extends React.HTMLAttributes<HTMLImageElement> {

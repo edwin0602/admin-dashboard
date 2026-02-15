@@ -1,11 +1,31 @@
 "use client";
 
+import { getSession } from "@/lib/services/auth.service";
 import { Graph } from "./components/DemoGraph";
+import { useEffect, useState } from "react";
 
 const MainPage = () => {
+  const [name, setName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await getSession();
+        if (user && user.name) {
+          setName(user.name);
+        }
+      } catch (error) {
+        console.error("Error fetching user session:", error);
+      }
+    };
+    fetchUser();
+  }, []);
+
   return (
     <div className="pt-4">
-      <h1 className="text-3xl font-semibold">Welcome Back, John!</h1>
+      <h1 className="text-3xl font-semibold">
+        Bienvenido{name ? `, ${name}` : ""}!
+      </h1>
       <p className="w-6/12 mt-2 text-muted-foreground text-sm">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate,
         itaque. Vero corporis, ipsa suscipit aliquam repudiandae consequatur
