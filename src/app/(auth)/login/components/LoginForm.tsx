@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -126,3 +126,5 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     </div>
   );
 }
+
+

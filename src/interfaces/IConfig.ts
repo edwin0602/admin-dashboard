@@ -17,3 +17,5 @@ export interface IConfig {
   permissionsCollectionId: string;
   rolePermissionsCollectionId: string;
 }
+
+

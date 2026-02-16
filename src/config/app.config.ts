@@ -89,3 +89,5 @@ export const config: IConfig = {
   permissionsCollectionId: "permissions",
   rolePermissionsCollectionId: "role_permissions",
 };
+
+

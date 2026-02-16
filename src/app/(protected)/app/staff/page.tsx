@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { Models } from "appwrite";
@@ -169,3 +169,5 @@ export default function StaffPage() {
         </div>
     );
 }
+
+

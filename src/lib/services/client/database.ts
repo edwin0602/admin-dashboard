@@ -52,3 +52,5 @@ export const deleteDocument = async (collectionId: string, documentId: string) =
         documentId
     );
 };
+
+

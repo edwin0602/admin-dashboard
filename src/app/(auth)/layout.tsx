@@ -1,6 +1,6 @@
 "use client";
 import PageLoader from "@/components/shared/PageLoader";
-import { getAccount } from "@/lib/services/auth";
+import { getAccount } from "@/lib/services/client/auth";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -36,3 +36,5 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default AuthLayout;
+
+

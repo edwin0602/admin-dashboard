@@ -8,3 +8,5 @@ export const getShortcutKey = (shortcutAction: IShortcut["action"]): string => {
   )?.keyAfterCtrl as string;
   return shortcutKey;
 };
+
+

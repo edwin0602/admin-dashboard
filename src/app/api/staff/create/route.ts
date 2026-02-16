@@ -1,4 +1,4 @@
-import { serverApi } from "@/appwrite/appwrite.server";
+import { serverApi } from "@/lib/services/server/appwrite.server";
 import { Permission, Role } from "node-appwrite";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
@@ -66,3 +66,5 @@ export async function POST(request: Request) {
         );
     }
 }
+
+

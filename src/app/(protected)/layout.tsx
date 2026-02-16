@@ -4,7 +4,7 @@ import { store } from "@/redux/store";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import { setAuthData, setLoading as setAuthLoading } from "@/redux/authSlice";
 
 const ProtectedLayoutContent = ({ children }: { children: React.ReactNode }) => {
@@ -47,3 +47,5 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default ProtectedLayout;
+
+

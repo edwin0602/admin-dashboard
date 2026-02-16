@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Models } from "appwrite";
 
@@ -114,3 +114,5 @@ export function useProfile() {
         refresh: fetchUser,
     };
 }
+
+

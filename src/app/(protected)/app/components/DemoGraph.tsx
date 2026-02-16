@@ -76,3 +76,5 @@ export function Graph() {
     </ResponsiveContainer>
   );
 }
+
+

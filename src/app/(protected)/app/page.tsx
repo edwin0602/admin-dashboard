@@ -1,6 +1,6 @@
 "use client";
 
-import { getAccount as getSession } from "@/lib/services/auth";
+import { getAccount as getSession } from "@/lib/services/client/auth";
 import { Graph } from "./components/DemoGraph";
 import { useEffect, useState } from "react";
 
@@ -66,3 +66,5 @@ const MainPage = () => {
 };
 
 export default MainPage;
+
+

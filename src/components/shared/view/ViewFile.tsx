@@ -1,4 +1,4 @@
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import React from "react";
 
 interface ViewFileProps extends React.HTMLAttributes<HTMLImageElement> {
@@ -19,3 +19,5 @@ const ViewFile: React.FC<ViewFileProps> = (props) => {
 };
 
 export default ViewFile;
+
+

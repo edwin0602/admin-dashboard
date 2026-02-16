@@ -45,3 +45,5 @@ export const addRolePermission = async (roleId: string, permissionId: string) =>
 export const deleteRolePermission = async (documentId: string) => {
     return await deleteDocument(config.rolePermissionsCollectionId, documentId);
 };
+
+

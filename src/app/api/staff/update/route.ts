@@ -1,4 +1,4 @@
-import { serverApi } from "@/appwrite/appwrite.server";
+import { serverApi } from "@/lib/services/server/appwrite.server";
 import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
@@ -55,3 +55,5 @@ export async function PATCH(request: Request) {
         );
     }
 }
+
+

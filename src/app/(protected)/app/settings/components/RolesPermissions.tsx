@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import { IRole } from "@/interfaces/IRole";
 import { IPermission } from "@/interfaces/IPermission";
 import { IRolePermission } from "@/interfaces/IRolePermission";
@@ -230,3 +230,5 @@ const RolesPermissions = () => {
 };
 
 export default RolesPermissions;
+
+

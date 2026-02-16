@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -139,3 +139,5 @@ export function ResetPasswordForm({ className, ...props }: ResetPasswordFormProp
         </div>
     );
 }
+
+

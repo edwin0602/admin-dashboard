@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -226,4 +226,6 @@ export function CreateStaffModal({ onSuccess }: CreateStaffModalProps) {
         </Dialog>
     );
 }
+
+
 

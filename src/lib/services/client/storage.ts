@@ -8,3 +8,5 @@ export const createFile = async (bucketId: string, file: any) => {
 export const getFilePreview = (bucketId: string, fileId: string) => {
     return storage.getFileView(bucketId, fileId).toString();
 };
+
+

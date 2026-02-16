@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import BreadCrumb from "./BreadCrumb";
-import { logout, getAccount as getSession } from "@/lib/services/auth";
+import { logout, getAccount as getSession } from "@/lib/services/client/auth";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import SidebarNavs from "../sidebar/SidebarNavs";
 import Logo from "@/components/shared/Logo";
@@ -162,3 +162,5 @@ const DashboardHeader = () => {
 };
 
 export default DashboardHeader;
+
+

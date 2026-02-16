@@ -32,3 +32,5 @@ type IEnum = {
   options: string[];
   rules?: React.SelectHTMLAttributes<HTMLSelectElement>;
 };
+
+

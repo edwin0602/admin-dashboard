@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { serverApi } from "@/appwrite/appwrite.server";
+import { serverApi } from "@/lib/services/server/appwrite.server";
 import { config } from "@/config/app.config";
 import { Query } from "node-appwrite";
 
@@ -179,3 +179,5 @@ async function getRoleDoc(roleId: string) {
         return null;
     }
 }   
+
+
