@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import BreadCrumb from "./BreadCrumb";
-import { logout, getSession } from "@/lib/services/auth.service";
+import { logout, getAccount as getSession } from "@/lib/services/auth";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import SidebarNavs from "../sidebar/SidebarNavs";
 import Logo from "@/components/shared/Logo";

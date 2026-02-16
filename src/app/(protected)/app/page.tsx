@@ -1,6 +1,6 @@
 "use client";
 
-import { getSession } from "@/lib/services/auth.service";
+import { getAccount as getSession } from "@/lib/services/auth";
 import { Graph } from "./components/DemoGraph";
 import { useEffect, useState } from "react";
 

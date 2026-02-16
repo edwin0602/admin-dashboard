@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/appwrite/appwrite.client";
+import api from "@/lib/services";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {

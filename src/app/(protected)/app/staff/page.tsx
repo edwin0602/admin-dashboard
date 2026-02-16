@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/appwrite/appwrite.client";
+import api from "@/lib/services";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { Models } from "appwrite";

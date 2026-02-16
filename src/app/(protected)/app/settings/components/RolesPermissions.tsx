@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import api from "@/appwrite/appwrite.client";
+import api from "@/lib/services";
 import { IRole } from "@/interfaces/IRole";
 import { IPermission } from "@/interfaces/IPermission";
 import { IRolePermission } from "@/interfaces/IRolePermission";

@@ -4,7 +4,7 @@ import { store } from "@/redux/store";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import api from "@/appwrite/appwrite.client";
+import api from "@/lib/services";
 import { setAuthData, setLoading as setAuthLoading } from "@/redux/authSlice";
 
 const ProtectedLayoutContent = ({ children }: { children: React.ReactNode }) => {

@@ -1,6 +1,6 @@
 "use client";
 import PageLoader from "@/components/shared/PageLoader";
-import { getSession } from "@/lib/services/auth.service";
+import { getAccount } from "@/lib/services/auth";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -10,7 +10,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const check = async () => {
       try {
-        const user = await getSession();
+        const user = await getAccount();
         if (user) {
           router.replace("/app");
         }
