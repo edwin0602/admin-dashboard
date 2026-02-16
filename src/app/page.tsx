@@ -1,24 +1,6 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import PageLoader from "@/components/shared/PageLoader";
-import { getSession } from "@/lib/services/auth.service";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+export default function RootPage() {
+  redirect("/app");
+}
 
-const MainPage = () => {
-  const router = useRouter();
-  useEffect(() => {
-    const check = async () => {
-      try {
-        await getSession();
-        router.replace("/app");
-      } catch (err: any) {
-        router.replace("/login");
-      }
-    };
-    check();
-  }, []);
-  return <PageLoader />;
-};
-
-export default MainPage;

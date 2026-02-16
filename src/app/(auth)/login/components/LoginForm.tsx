@@ -20,6 +20,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { store } from "@/redux/store";
+import { setAuthData } from "@/redux/authSlice";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -49,36 +51,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     try {
-      await api.createSession(data);
-      const user = await api.getAccount();
-
-      // 1. Email Verification Check
-      if (!user.emailVerification) {
-        await api.deleteCurrentSession();
-        toast({
-          title: "Email not verified",
-          variant: "destructive",
-          description: "Please verify your email before logging in.",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // 2. Staff Status Check
-      const status = await api.getStaffStatus(user.$id);
-      if (status === "INACTIVE" || status === "BANNED") {
-        await api.deleteCurrentSession();
-        const message = status === "BANNED"
-          ? "Your account has been banned. Please contact support."
-          : "Your account is inactive. Please contact an administrator.";
-        toast({
-          title: "Access Denied",
-          variant: "destructive",
-          description: message,
-        });
-        setIsLoading(false);
-        return;
-      }
+      const authData = await api.login(data);
+      store.dispatch(setAuthData(authData));
 
       toast({
         title: "Login Successful",
@@ -87,9 +61,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       router.replace("/app");
     } catch (err: any) {
       toast({
-        title: "Can't login",
+        title: "Access Denied",
         variant: "destructive",
-        description: err.message,
+        description: err.message || "Invalid credentials or blocked access.",
       });
     } finally {
       setIsLoading(false);

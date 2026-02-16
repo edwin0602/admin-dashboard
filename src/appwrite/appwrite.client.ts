@@ -6,15 +6,18 @@ import {
   ID,
   Query,
   Storage,
+  Teams,
 } from "appwrite";
 
 const databaseId = config.databaseId;
 
 export class AppwriteService {
+  // --- Core & Initialization ---
   private client = new Appwrite();
   public account: Account;
   public databases: Databases;
   public storage: Storage;
+  public teams: Teams;
   private _cachedRoles: any = null;
 
   constructor() {
@@ -22,9 +25,10 @@ export class AppwriteService {
     this.account = new Account(this.client);
     this.databases = new Databases(this.client);
     this.storage = new Storage(this.client);
+    this.teams = new Teams(this.client);
   }
 
-  // Auth Methods
+  // --- Auth & Session ---
   async getAccount() {
     return await this.account.get();
   }
@@ -44,7 +48,11 @@ export class AppwriteService {
     return await this.account.deleteSession("current");
   }
 
-  // Account Management Methods
+  async getTeamMemberships(teamId: string) {
+    return await this.teams.listMemberships(teamId);
+  }
+
+  // --- Account Management ---
   async updateName(name: string) {
     return await this.account.updateName(name);
   }
@@ -57,6 +65,10 @@ export class AppwriteService {
     return await this.account.updatePhone(phone, password);
   }
 
+  async updatePassword(password: string, oldPassword: string) {
+    return await this.account.updatePassword(password, oldPassword);
+  }
+
   async createRecovery(email: string) {
     const url = `${window.location.origin}/reset-password`;
     return await this.account.createRecovery(email, url);
@@ -66,11 +78,7 @@ export class AppwriteService {
     return await this.account.updateRecovery(userId, secret, password, password);
   }
 
-  async updatePassword(password: string, oldPassword: string) {
-    return await this.account.updatePassword(password, oldPassword);
-  }
-
-  // Database Methods
+  // --- Generic Database Operations ---
   async createDocument(collectionId: string, data: any, documentId: string = ID.unique(), permissions?: string[]) {
     return await this.databases.createDocument(
       databaseId,
@@ -120,72 +128,7 @@ export class AppwriteService {
     );
   }
 
-  // Storage Methods
-  async createFile(bucketId: string, file: any) {
-    return await this.storage.createFile(bucketId, ID.unique(), file);
-  }
-
-  getFilePreview(bucketId: string, fileId: string) {
-    return this.storage.getFileView(bucketId, fileId).toString();
-  }
-
-  async getStaffStatus(userId: string) {
-    try {
-      const result = await this.databases.listDocuments(config.databaseId, config.staffCollectionId, [
-        Query.equal("userId", [userId]),
-        Query.limit(1)
-      ]);
-
-      if (result.documents.length > 0) {
-        return result.documents[0].status;
-      }
-      return null;
-    } catch (error) {
-      console.error("Error fetching staff status:", error);
-      return null;
-    }
-  }
-
-  // Internal API Methods
-  async createStaff(data: any) {
-    const response = await fetch("/api/staff/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    if (!response.ok) {
-      throw {
-        message: result.error || "Failed to create staff",
-        code: result.code || response.status
-      };
-    }
-    return result;
-  }
-
-  async updateStaff(data: any) {
-    const response = await fetch("/api/staff/update", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    if (!response.ok) {
-      throw {
-        message: result.error || "Failed to update staff",
-        code: result.code || response.status
-      };
-    }
-    return result;
-  }
-
-  // Roles & Permissions Methods
+  // --- Roles & Permissions (with Caching) ---
   async getRoles(forceRefresh: boolean = false) {
     if (this._cachedRoles && !forceRefresh) {
       return this._cachedRoles;
@@ -225,6 +168,107 @@ export class AppwriteService {
   async deleteRolePermission(documentId: string) {
     return await this.deleteDocument(config.rolePermissionsCollectionId, documentId);
   }
+
+  // --- Staff Module ---
+  async getStaffStatus(userId: string) {
+    try {
+      const result = await this.databases.listDocuments(config.databaseId, config.staffCollectionId, [
+        Query.equal("userId", [userId]),
+        Query.limit(1)
+      ]);
+
+      if (result.documents.length > 0) {
+        return result.documents[0].status;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching staff status:", error);
+      return null;
+    }
+  }
+
+  async createStaff(data: any) {
+    const response = await fetch("/api/staff/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw {
+        message: result.error || "Failed to create staff",
+        code: result.code || response.status
+      };
+    }
+    return result;
+  }
+
+  async updateStaff(data: any) {
+    const response = await fetch("/api/staff/update", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw {
+        message: result.error || "Failed to update staff",
+        code: result.code || response.status
+      };
+    }
+    return result;
+  }
+
+  // --- Storage ---
+  async createFile(bucketId: string, file: any) {
+    return await this.storage.createFile(bucketId, ID.unique(), file);
+  }
+
+  getFilePreview(bucketId: string, fileId: string) {
+    return this.storage.getFileView(bucketId, fileId).toString();
+  }
+
+  // --- Permission System ---
+  async login(data: any) {
+    try {
+      await this.account.createEmailSession(data.email, data.password);
+      return await this.getCurrentUserPermissions();
+    } catch (error) {
+      try { await this.account.deleteSession("current"); } catch (e) { }
+      throw error;
+    }
+  }
+
+  async getCurrentUserPermissions() {
+    const { jwt } = await this.account.createJWT();
+    const response = await fetch("/api/auth/me", {
+      headers: {
+        "Authorization": `Bearer ${jwt}`
+      }
+    });
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      console.error("NON JSON RESPONSE:", text);
+      throw new Error(`Expected JSON but received ${contentType}`);
+    }
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || `Unauthorized (${response.status})`);
+    }
+
+    return data;
+  }
+
 }
 
 const api = new AppwriteService();

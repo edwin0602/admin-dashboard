@@ -17,6 +17,9 @@ import { setCollection } from "@/redux/collectionSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 import { selectTotal, setTotal } from "@/redux/appSlice";
 import { IRole } from "@/interfaces/IRole";
+import { usePermissions } from "@/hooks/usePermissions";
+import { useRouter } from "next/navigation";
+import { PERMISSION_GROUPS } from "@/config/permissions.config";
 
 export default function StaffPage() {
     const [data, setData] = useState<Models.Document[]>([]);
@@ -24,6 +27,9 @@ export default function StaffPage() {
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedStaff, setSelectedStaff] = useState<Models.Document | null>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
+
+    const { hasGroup, isLoading } = usePermissions();
+    const router = useRouter();
 
     const total = useAppSelector(selectTotal);
 
@@ -109,6 +115,20 @@ export default function StaffPage() {
             }
         }
     }, [config.staffCollectionId]);
+
+    useEffect(() => {
+        if (!isLoading && !hasGroup(PERMISSION_GROUPS.STAFF_READ)) {
+            router.replace("/app");
+            toast({
+                title: "Unauthorized",
+                description: "You do not have permission to view this page.",
+                variant: "destructive",
+            });
+        }
+    }, [isLoading, hasGroup, router]);
+
+    if (isLoading) return <TableSkeleton />;
+    if (!hasGroup(PERMISSION_GROUPS.STAFF_READ)) return null;
 
     return (
         <div>

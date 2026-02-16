@@ -11,6 +11,8 @@ import { Component, FileText, Home, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { usePermissions } from "@/hooks/usePermissions";
+import { PERMISSION_GROUPS } from "@/config/permissions.config";
 
 interface NavInterface {
   name: string;
@@ -20,19 +22,24 @@ interface NavInterface {
 
 const SidebarNavs: React.FC = () => {
   const pathname: string = usePathname();
+  const { hasGroup } = usePermissions();
 
   const navs: NavInterface[] = [
     {
       name: "Overview",
       icon: <Home size={14} />,
       link: "/app",
-    },
-    {
+    }
+  ];
+
+  // Add Staff link if user has STAFF_READ permission group
+  if (hasGroup(PERMISSION_GROUPS.STAFF_READ)) {
+    navs.push({
       name: "Staff",
       icon: <User size={14} />,
       link: "/app/staff",
-    },
-  ];
+    });
+  }
 
   return (
     <nav className="py-8 w-full rounded-xl flex flex-col gap-1">
@@ -103,17 +110,19 @@ const SidebarNavs: React.FC = () => {
           </Link>
         ))}
 
-      <Link
-        key={"settings"}
-        href={"/app/settings"}
-        className={`flex w-full items-center text-sm transition-all ${pathname === "/app/settings"
-          ? "bg-muted text-primary"
-          : "text-muted-foreground"
-          } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
-      >
-        <Settings size={14} />
-        <span className="text-sm">Settings</span>
-      </Link>
+      {hasGroup(PERMISSION_GROUPS.CONFIG_READ) && (
+        <Link
+          key={"settings"}
+          href={"/app/settings"}
+          className={`flex w-full items-center text-sm transition-all ${pathname === "/app/settings"
+            ? "bg-muted text-primary"
+            : "text-muted-foreground"
+            } hover:bg-muted rounded-md gap-2 p-1.5 px-2`}
+        >
+          <Settings size={14} />
+          <span className="text-sm">Settings</span>
+        </Link>
+      )}
     </nav>
   );
 };

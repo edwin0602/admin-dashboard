@@ -84,6 +84,7 @@ export const config: IConfig = {
     },
   ],
   staffCollectionId: "staff",
+  staffTeamId: process.env.NEXT_PUBLIC_APPWRITE_STAFF_TEAM_ID || "699245b7000828c0f75c",
   rolesCollectionId: "roles",
   permissionsCollectionId: "permissions",
   rolePermissionsCollectionId: "role_permissions",
