@@ -263,6 +263,7 @@ export class AppwriteService {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error("[AppwriteService] GET /api/auth/me failed:", data);
       throw new Error(data.error || `Unauthorized (${response.status})`);
     }
 
