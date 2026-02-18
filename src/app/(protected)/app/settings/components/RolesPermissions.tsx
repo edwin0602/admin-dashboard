@@ -12,6 +12,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 const RolesPermissions = () => {
     const { toast } = useToast();
@@ -93,8 +102,9 @@ const RolesPermissions = () => {
     };
 
     const permissionsByGroup = permissions.reduce((acc, perm) => {
-        if (!acc[perm.group]) acc[perm.group] = [];
-        acc[perm.group].push(perm);
+        const groupKey = perm.group.split('_')[0];
+        if (!acc[groupKey]) acc[groupKey] = [];
+        acc[groupKey].push(perm);
         return acc;
     }, {} as Record<string, IPermission[]>);
 
@@ -118,112 +128,125 @@ const RolesPermissions = () => {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Roles List */}
-                <Card className="md:col-span-1 bg-muted/50 border-primary/20 shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="text-md font-medium">Roles</CardTitle>
-                        <CardDescription>Select a role to manage permissions</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                        <ScrollArea className="h-[400px]">
-                            <div className="flex flex-col">
-                                {roles.map((role) => (
-                                    <button
-                                        key={role.$id}
-                                        onClick={() => handleRoleSelect(role)}
-                                        className={`flex flex-col items-start gap-1 p-4 text-left transition-colors hover:bg-muted ${selectedRole?.$id === role.$id ? "bg-muted" : ""
-                                            }`}
-                                    >
-                                        <div className="flex w-full items-center justify-between">
-                                            <span className="font-semibold text-sm">{role.name}</span>
-                                            {role.isSystem && (
-                                                <Badge variant="secondary" className="text-[10px] h-4">
-                                                    System
-                                                </Badge>
-                                            )}
-                                        </div>
-                                        <span className="text-xs text-muted-foreground line-clamp-1">
-                                            {role.description}
-                                        </span>
-                                    </button>
-                                ))}
-                            </div>
-                        </ScrollArea>
-                    </CardContent>
-                </Card>
-
-                {/* Permissions Grid */}
-                <Card className="md:col-span-2 bg-muted/50 border-primary/20 shadow-lg">
-                    <CardHeader>
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <CardTitle className="text-md font-medium">
-                                    {selectedRole ? `Permissions for ${selectedRole.name}` : "Select a role"}
-                                </CardTitle>
-                                <CardDescription>
-                                    {selectedRole?.isSystem
-                                        ? "System roles cannot be modified"
-                                        : "Toggle checkboxes to assign/remove permissions"}
-                                </CardDescription>
-                            </div>
-                            {selectedRole?.isSystem && <ShieldAlert className="h-5 w-5 text-yellow-500" />}
+            <Card className="border-primary/20 shadow-lg">
+                <CardHeader>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <CardTitle className="text-md font-medium">Role & Permissions Management</CardTitle>
+                            <CardDescription>
+                                {selectedRole?.isSystem
+                                    ? "System roles cannot be modified"
+                                    : "Select a role and toggle permissions to update access levels"}
+                            </CardDescription>
                         </div>
-                    </CardHeader>
-                    <CardContent>
-                        {loadingPermissions ? (
-                            <div className="flex items-center justify-center h-[300px]">
-                                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                            </div>
-                        ) : selectedRole ? (
-                            <ScrollArea className="h-[350px] pr-4">
-                                <div className="space-y-6">
-                                    {Object.entries(permissionsByGroup).map(([group, perms]) => (
-                                        <div key={group} className="space-y-3">
-                                            <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                                {group}
-                                            </h4>
-                                            <div className="grid grid-cols-1 gap-3">
-                                                {perms.map((perm) => {
-                                                    const isChecked = rolePermissions.some(rp => rp.permissionId === perm.$id);
-                                                    return (
-                                                        <div
-                                                            key={perm.$id}
-                                                            className="flex items-start space-x-3 space-y-0"
-                                                        >
-                                                            <Checkbox
-                                                                id={perm.$id}
-                                                                checked={isChecked}
-                                                                onCheckedChange={() => handleTogglePermission(perm.$id)}
-                                                                disabled={selectedRole.isSystem || saving}
-                                                            />
-                                                            <div className="grid gap-1.5 leading-none">
-                                                                <label
-                                                                    htmlFor={perm.$id}
-                                                                    className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${selectedRole.isSystem ? "cursor-not-allowed" : "cursor-pointer"
-                                                                        }`}
-                                                                >
-                                                                    {perm.description}
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
+                        <div className="flex items-center gap-3 w-full md:w-[300px]">
+                            <Select
+                                value={selectedRole?.$id || ""}
+                                onValueChange={(value) => {
+                                    const role = roles.find(r => r.$id === value);
+                                    if (role) handleRoleSelect(role);
+                                }}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select a role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {roles.map((role) => (
+                                        <SelectItem key={role.$id} value={role.$id}>
+                                            <div className="flex items-center gap-2">
+                                                <span>{role.name}</span>
+                                                {role.isSystem && (
+                                                    <Badge variant="secondary" className="text-[10px] h-3 px-1">
+                                                        System
+                                                    </Badge>
+                                                )}
                                             </div>
-                                            <Separator className="mt-4" />
-                                        </div>
+                                        </SelectItem>
                                     ))}
-                                </div>
-                            </ScrollArea>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
-                                <ShieldCheck className="h-12 w-12 mb-2 opacity-20" />
-                                <p className="text-sm">Select a role to see its permissions</p>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-            </div>
+                                </SelectContent>
+                            </Select>
+                            {selectedRole?.isSystem && <ShieldAlert className="h-5 w-5 text-yellow-500 shrink-0" />}
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    {loadingPermissions ? (
+                        <div className="flex items-center justify-center min-h-[300px]">
+                            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                        </div>
+                    ) : selectedRole ? (
+                        <ScrollArea className="h-[500px] pr-4">
+                            <Accordion type="multiple" className="w-full space-y-2">
+                                {Object.entries(permissionsByGroup).map(([group, perms]) => (
+                                    <AccordionItem key={group} value={group} className="border rounded-lg px-4 bg-muted/30">
+                                        <AccordionTrigger className="hover:no-underline py-4">
+                                            <div className="flex items-center gap-3">
+                                                <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">
+                                                    {group}
+                                                </h4>
+                                                <Badge variant="outline" className="text-[10px]">
+                                                    {perms.length} Permissions
+                                                </Badge>
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            <div className="flex flex-col border rounded-md mb-4 bg-background overflow-hidden">
+                                                {/* Table Header */}
+                                                <div className="grid grid-cols-[1fr_auto] gap-4 p-3 bg-muted/50 border-b text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                                    <div>Permission Name</div>
+                                                    <div className="text-center w-12">Set</div>
+                                                </div>
+                                                {/* Table Rows */}
+                                                <div className="divide-y">
+                                                    {perms.map((perm) => {
+                                                        const isChecked = rolePermissions.some(rp => rp.permissionId === perm.$id);
+                                                        return (
+                                                            <div
+                                                                key={perm.$id}
+                                                                className={cn(
+                                                                    "grid grid-cols-[1fr_auto] gap-4 p-3 items-center transition-colors hover:bg-muted/30",
+                                                                    selectedRole.isSystem ? "opacity-70" : ""
+                                                                )}
+                                                            >
+                                                                <div className="flex flex-col gap-0.5">
+                                                                    <label
+                                                                        htmlFor={perm.$id}
+                                                                        className={cn(
+                                                                            "text-sm font-medium leading-none",
+                                                                            selectedRole.isSystem ? "cursor-not-allowed" : "cursor-pointer"
+                                                                        )}
+                                                                    >
+                                                                        {perm.description}
+                                                                    </label>
+                                                                    <span className="text-[10px] text-muted-foreground">{perm.$id}</span>
+                                                                </div>
+                                                                <div className="flex items-center justify-center w-12">
+                                                                    <Checkbox
+                                                                        id={perm.$id}
+                                                                        checked={isChecked}
+                                                                        onCheckedChange={() => handleTogglePermission(perm.$id)}
+                                                                        disabled={selectedRole.isSystem || saving}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </ScrollArea>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center min-h-[300px] text-muted-foreground">
+                            <ShieldCheck className="h-12 w-12 mb-2 opacity-20" />
+                            <p className="text-sm font-medium">Select a role to manage system permissions</p>
+                            <p className="text-xs opacity-60">Control user access levels across the application</p>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
         </section>
     );
 };

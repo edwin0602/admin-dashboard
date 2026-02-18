@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/lib/services";
+import api from "@/lib/services/client";
 import ViewFile from "@/components/shared/view/ViewFile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
