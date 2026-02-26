@@ -1,50 +1,50 @@
 /**
  * Centralized Permission Configuration
- * Maps permission group keys (slugs) to their respective Appwrite Document IDs.
+ * Maps permission keys to their respective slugs (which are also the Appwrite Document IDs).
  */
 
 export const PERMISSIONS = {
-    // Staff Management Group
-    STAFF: {
-        READ: "69923c27000129ac29f2",          // STAFF_READ
-        INVITE: "69923c37001a11500426",        // STAFF_INVITE
-        UPDATE: "69923c4100385732593ff",        // STAFF_UPDATE
-        DELETE: "69923c600038bdc2fe14",        // STAFF_DELETE
-        ASSIGN_ROLES: "69923c71003809dec59c",  // STAFF_ASSIGN_ROLES
-    },
-
-    // User Organization Group
-    USERS: {
-        INVITE: "6992286b00039ee443ce",        // USERS_INVITE
+    // System Configuration Group
+    CONFIG: {
+        READ: "CONFIG_READ",
+        WRITE: "CONFIG_WRITE",
     },
 
     // RBAC Management Group
     ROLES: {
-        MANAGE: "69922865003940c34a41",        // ROLES_MANAGE
+        MANAGE: "ROLES_MANAGE",
     },
 
-    // System Configuration Group
-    CONFIG: {
-        READ: "6992285900350f6df5c6",          // CONFIG_READ
-        WRITE: "6992285f0031e4084cea",         // CONFIG_WRITE
+    // User Organization Group
+    USERS: {
+        INVITE: "USERS_INVITE",
+    },
+
+    // Staff Management Group
+    STAFF: {
+        READ: "STAFF_READ",
+        INVITE: "STAFF_INVITE",
+        UPDATE: "STAFF_UPDATE",
+        DELETE: "STAFF_DELETE",
+        ASSIGN_ROLES: "STAFF_ASSIGN_ROLES",
+    },
+
+    // Keno Operations Group
+    KENO: {
+        VENUES_CREATE: "KENO_VENUES_CREATE",
+        VENUES_READ: "KENO_VENUES_READ",
+        VENUES_UPDATE: "KENO_VENUES_UPDATE",
+        TICKETS_CREATE: "KENO_TICKETS_CREATE",
+        TICKETS_VOID: "KENO_TICKETS_VOID",
+        TICKETS_PAY: "KENO_TICKETS_PAY",
+        REPORTS_VIEW: "KENO_REPORTS_VIEW",
     }
 } as const;
 
-/**
- * Group Identifiers
- * These correspond to the 'group' field in the Appwrite permissions collection.
- * Using these is often more convenient than individual IDs for high-level UI control.
- */
-export const PERMISSION_GROUPS = {
-    STAFF_READ: "STAFF_READ",
-    STAFF_INVITE: "STAFF_INVITE",
-    STAFF_UPDATE: "STAFF_UPDATE",
-    STAFF_DELETE: "STAFF_DELETE",
-    STAFF_ASSIGN_ROLES: "STAFF_ASSIGN_ROLES",
-    USERS_INVITE: "USERS_INVITE",
-    ROLES_MANAGE: "ROLES_MANAGE",
-    CONFIG_READ: "CONFIG_READ",
-    CONFIG_WRITE: "CONFIG_WRITE",
-} as const;
-
-
+// Helper type to get a union of all permission keys
+export type PermissionKey =
+    | typeof PERMISSIONS.CONFIG[keyof typeof PERMISSIONS.CONFIG]
+    | typeof PERMISSIONS.ROLES[keyof typeof PERMISSIONS.ROLES]
+    | typeof PERMISSIONS.USERS[keyof typeof PERMISSIONS.USERS]
+    | typeof PERMISSIONS.STAFF[keyof typeof PERMISSIONS.STAFF]
+    | typeof PERMISSIONS.KENO[keyof typeof PERMISSIONS.KENO];

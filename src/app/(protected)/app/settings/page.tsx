@@ -9,16 +9,16 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 import TableSkeleton from "../collections/[cid]/components/table-skeleton";
-import { PERMISSION_GROUPS } from "@/config/permissions.config";
+import { PERMISSIONS } from "@/config/permissions.config";
 
 const Settings = () => {
 
-  const { hasGroup, isLoading } = usePermissions();
+  const { hasPermission, isLoading } = usePermissions();
   const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!isLoading && !hasGroup(PERMISSION_GROUPS.CONFIG_READ)) {
+    if (!isLoading && !hasPermission(PERMISSIONS.CONFIG.READ)) {
       router.replace("/app");
       toast({
         title: "Unauthorized",
@@ -26,10 +26,10 @@ const Settings = () => {
         variant: "destructive",
       });
     }
-  }, [isLoading, hasGroup, router]);
+  }, [isLoading, hasPermission, router]);
 
   if (isLoading) return <TableSkeleton />;
-  if (!hasGroup(PERMISSION_GROUPS.CONFIG_READ)) return null;
+  if (!hasPermission(PERMISSIONS.CONFIG.READ)) return null;
 
   return (
     <div className="space-y-10">

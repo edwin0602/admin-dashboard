@@ -67,6 +67,44 @@ export const config: IConfig = {
           },
         },
       ],
+    },
+    {
+      name: "Venues",
+      groupId: "basic",
+      collectionId: "venues",
+      searchColumn: "name",
+      columns: [
+        {
+          key: "name",
+          label: "Name",
+          rules: {
+            required: true,
+          },
+        },
+        {
+          key: "code",
+          label: "Code",
+          rules: {
+            required: true,
+          },
+        },
+        {
+          key: "isActive",
+          label: "Status",
+          type: "boolean",
+          rules: {
+            required: false,
+          },
+        },
+        {
+          key: "commissionPct",
+          label: "Commission %",
+          type: "number",
+          rules: {
+            required: false,
+          },
+        },
+      ],
     }
   ],
   shortcuts: [
@@ -88,6 +126,7 @@ export const config: IConfig = {
   rolesCollectionId: "roles",
   permissionsCollectionId: "permissions",
   rolePermissionsCollectionId: "role_permissions",
+  venuesCollectionId: "venues",
 };
 
 

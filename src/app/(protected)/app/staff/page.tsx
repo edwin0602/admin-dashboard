@@ -19,7 +19,7 @@ import { selectTotal, setTotal } from "@/redux/appSlice";
 import { IRole } from "@/interfaces/IRole";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useRouter } from "next/navigation";
-import { PERMISSION_GROUPS } from "@/config/permissions.config";
+import { PERMISSIONS } from "@/config/permissions.config";
 
 export default function StaffPage() {
     const [data, setData] = useState<Models.Document[]>([]);
@@ -28,7 +28,7 @@ export default function StaffPage() {
     const [selectedStaff, setSelectedStaff] = useState<Models.Document | null>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
 
-    const { hasGroup, isLoading } = usePermissions();
+    const { hasPermission, isLoading } = usePermissions();
     const router = useRouter();
 
     const total = useAppSelector(selectTotal);
@@ -93,8 +93,8 @@ export default function StaffPage() {
             cell: ({ row }) => {
                 const status = row.original.status;
                 let variant: "default" | "secondary" | "destructive" | "outline" = "outline";
-                if (status === "ACTIVE") variant = "default";
-                if (status === "BANNED") variant = "destructive";
+                if (status.toLowerCase() === "active") variant = "default";
+                if (status.toLowerCase() === "banned") variant = "destructive";
                 return <Badge variant={variant}>{status}</Badge>;
             }
         },
@@ -117,7 +117,7 @@ export default function StaffPage() {
     }, [config.staffCollectionId]);
 
     useEffect(() => {
-        if (!isLoading && !hasGroup(PERMISSION_GROUPS.STAFF_READ)) {
+        if (!isLoading && !hasPermission(PERMISSIONS.STAFF.READ)) {
             router.replace("/app");
             toast({
                 title: "Unauthorized",
@@ -125,10 +125,10 @@ export default function StaffPage() {
                 variant: "destructive",
             });
         }
-    }, [isLoading, hasGroup, router]);
+    }, [isLoading, hasPermission, router]);
 
     if (isLoading) return <TableSkeleton />;
-    if (!hasGroup(PERMISSION_GROUPS.STAFF_READ)) return null;
+    if (!hasPermission(PERMISSIONS.STAFF.READ)) return null;
 
     return (
         <div>

@@ -7,12 +7,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { config } from "@/config/app.config";
-import { Component, FileText, Home, Settings, User } from "lucide-react";
+import { LayoutDashboard, User, Settings, MapPin, Home, Component, FileText } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { usePermissions } from "@/hooks/usePermissions";
-import { PERMISSION_GROUPS } from "@/config/permissions.config";
+import { PERMISSIONS } from "@/config/permissions.config";
 
 interface NavInterface {
   name: string;
@@ -22,7 +22,7 @@ interface NavInterface {
 
 const SidebarNavs: React.FC = () => {
   const pathname: string = usePathname();
-  const { hasGroup } = usePermissions();
+  const { hasPermission } = usePermissions();
 
   const navs: NavInterface[] = [
     {
@@ -32,12 +32,21 @@ const SidebarNavs: React.FC = () => {
     }
   ];
 
-  // Add Staff link if user has STAFF_READ permission group
-  if (hasGroup(PERMISSION_GROUPS.STAFF_READ)) {
+  // Add Staff link if user has STAFF_READ permission
+  if (hasPermission(PERMISSIONS.STAFF.READ)) {
     navs.push({
       name: "Staff",
       icon: <User size={14} />,
       link: "/app/staff",
+    });
+  }
+
+  // Add Venues link
+  if (hasPermission(PERMISSIONS.KENO.VENUES_READ)) {
+    navs.push({
+      name: "Venues",
+      icon: <MapPin size={14} />,
+      link: "/app/venues",
     });
   }
 
@@ -110,7 +119,7 @@ const SidebarNavs: React.FC = () => {
           </Link>
         ))}
 
-      {hasGroup(PERMISSION_GROUPS.CONFIG_READ) && (
+      {hasPermission(PERMISSIONS.CONFIG.READ) && (
         <Link
           key={"settings"}
           href={"/app/settings"}

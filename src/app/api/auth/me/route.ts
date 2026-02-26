@@ -34,7 +34,7 @@ export async function GET(request: Request) {
             }, { status: 404 });
         }
 
-        if (staffDoc.status !== "ACTIVE") {
+        if (staffDoc.status !== "active") {
             serverApi.deleteAuthCookies();
             return NextResponse.json({
                 error: `Account is ${staffDoc.status}`,
@@ -116,7 +116,7 @@ export async function GET(request: Request) {
             permissionsResolved = permissionsResult.documents;
         }
 
-        const permissionKeys = permissionsResolved.map(p => p.key);
+        const permissionKeys = permissionsResolved.map(p => p.$id); // Use the slug ($id)
         const groups = Array.from(new Set(permissionsResolved.map(p => p.group)));
 
         return NextResponse.json({
@@ -178,6 +178,6 @@ async function getRoleDoc(roleId: string) {
         console.error("[API/AUTH/ME] Role profile lookup failed:", error.message);
         return null;
     }
-}   
+}
 
 

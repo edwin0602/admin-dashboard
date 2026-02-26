@@ -6,9 +6,9 @@ export type IColumn = {
   enableHiding?: boolean;
   className?: string;
   rules?: IRules;
-} & (IBoolean | IFile | IString | IDate | IEnum);
+} & (IBoolean | IFile | IString | IDate | IEnum | INumber);
 
-interface IRules extends React.InputHTMLAttributes<HTMLInputElement> {}
+interface IRules extends React.InputHTMLAttributes<HTMLInputElement> { }
 
 type IBoolean = {
   type?: "boolean";
@@ -31,6 +31,10 @@ type IEnum = {
   type?: "enum";
   options: string[];
   rules?: React.SelectHTMLAttributes<HTMLSelectElement>;
+};
+
+type INumber = {
+  type?: "number";
 };
 
 

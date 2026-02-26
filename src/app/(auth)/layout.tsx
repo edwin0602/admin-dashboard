@@ -12,7 +12,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
       try {
         const user = await getAccount();
         if (user) {
-          router.replace("/app");
+          //router.replace("/app");
         }
       } catch (err: any) {
         // No active session is expected for public routes
