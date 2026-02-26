@@ -105,6 +105,52 @@ export const config: IConfig = {
           },
         },
       ],
+    },
+    {
+      name: "Venue Devices",
+      groupId: "basic",
+      collectionId: "venue_devices",
+      searchColumn: "label",
+      columns: [
+        {
+          key: "label",
+          label: "Label",
+          rules: {
+            required: true,
+          },
+        },
+        {
+          key: "venueId",
+          label: "Venue ID",
+          rules: {
+            required: true,
+          },
+        },
+        {
+          key: "status",
+          label: "Status",
+          type: "enum",
+          options: ["pending", "active", "revoked"],
+          rules: {
+            required: true,
+          },
+        },
+        {
+          key: "activationCode",
+          label: "Code",
+          rules: {
+            required: true,
+          },
+        },
+        {
+          key: "codeExpiresAt",
+          label: "Expires At",
+          type: "date",
+          rules: {
+            required: true,
+          },
+        },
+      ],
     }
   ],
   shortcuts: [
@@ -127,6 +173,7 @@ export const config: IConfig = {
   permissionsCollectionId: "permissions",
   rolePermissionsCollectionId: "role_permissions",
   venuesCollectionId: "venues",
+  venueDevicesCollectionId: "venue_devices",
 };
 
 

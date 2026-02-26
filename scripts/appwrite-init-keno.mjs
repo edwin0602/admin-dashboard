@@ -188,7 +188,33 @@ const COLLECTIONS = [
   },
 
   // ══════════════════════════════════════════════════════════
-  // 5. rounds  (each executed draw / sorteo)
+  // 5. venue_devices (authorised selling points / cashiers)
+  //    Represents a specific device (browser session) authorised
+  //     to sell tickets within a venue.
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 'venue_devices',
+    name: 'Venue Devices',
+    attrs: [
+      { fn: 'string', key: 'venueId', required: true, size: 36 },
+      { fn: 'string', key: 'activationCode', required: true, size: 6 },
+      { fn: 'datetime', key: 'codeExpiresAt', required: true },
+      // status: pending | active | revoked
+      { fn: 'enum', key: 'status', required: false, elements: ['pending', 'active', 'revoked'], dflt: 'pending' },
+      { fn: 'datetime', key: 'activatedAt', required: false },
+      { fn: 'string', key: 'activatedBy', required: false, size: 36 }, // userId
+      { fn: 'string', key: 'browserInfo', required: false, size: 500 }, // UserAgent
+      { fn: 'string', key: 'label', required: true, size: 100 }, // "Caja 1", etc.
+    ],
+    indexes: [
+      { key: 'idx_venueId', type: 'key', attrs: ['venueId'] },
+      { key: 'idx_status', type: 'key', attrs: ['status'] },
+      { key: 'uidx_activationCode', type: 'unique', attrs: ['activationCode'] },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // 6. rounds  (each executed draw / sorteo)
   // ══════════════════════════════════════════════════════════
   {
     id: 'rounds',

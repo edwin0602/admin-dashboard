@@ -17,6 +17,7 @@ export interface IConfig {
   permissionsCollectionId: string;
   rolePermissionsCollectionId: string;
   venuesCollectionId: string;
+  venueDevicesCollectionId: string;
 }
 
 
